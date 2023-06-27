@@ -1,0 +1,44 @@
+Content:
+Points and badges
+- Admin accounts - Full access, set user as advisor
+- Advisor account - Grant credit/points to student
+	- Have a group of user accounts that they manage
+	- Post tasks for the student to do
+- User accounts - basic student account, can view points and badges of individual
+- Map page
+	- Main map image
+	- Unique SVG for each task (location image)
+		- The user can add information about what they are doing there
+		- When clicked on, display what they did
+		- upload images that thye might have
+	- Types of missions
+		- Time sensitive missions
+		- Yearlong missions
+		- broadcasted missions
+		- assigned missions (only users assigned these missions can see them)
+- Leaderboard of points
+- What are the ways to obtain them
+- Help icon
+
+
+If students want to earn more points, 
+
+For each task
+- Task name
+- Time remaining
+- Description
+- Location
+- Point value
+- images related
+- etc.
+
+Database (Tables to set up):
+- Login (PRIMARY_KEY uuid / username / password hash / role / profile picture)
+- students (Advisor name / points / badges)
+- Mission (mission name / mission point value / mission description / images (optional) / assigned (user or broadcast if everyone) / what time (when is the event happening) / location)
+
+
+Todo List:
+- SET UP the ORM (Database stuff, roles + missions, users) -> Alex 
+- SET UP the front end pages -> Alex and Jerry
+- Authentication if we get to it.
