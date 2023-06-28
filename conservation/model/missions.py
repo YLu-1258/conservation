@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.exc import IntegrityError
-from backend.helpers import cast_int
-from backend import db
+from conservation.helpers import cast_int
+from conservation import db
 
 
 class Missions(db.Model):

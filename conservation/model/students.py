@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend import db
-from backend.helpers import cast_int
+from conservation import db
+from conservation.helpers import cast_int
 
 class Student(db.Model):
     __tablename__ = 'student_info'

@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, reqparse
-from backend import db
-from backend.model.user import User
-from backend.model.students import Student
-from backend.model.missions import Missions
-from backend.helpers import cast_int
+from conservation import db
+from conservation.model.user import User
+from conservation.model.students import Student
+from conservation.model.missions import Missions
+from conservation.helpers import cast_int
 
 users_bp = Blueprint("users", __name__, url_prefix = "/api/users")
 points_bp = Blueprint("points", __name__, url_prefix = "/api/points")

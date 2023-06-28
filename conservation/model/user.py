@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend import db
-from backend.helpers import cast_int
+from conservation import db
+from conservation.helpers import cast_int
 
 
 class User(db.Model):
@@ -43,7 +43,7 @@ class User(db.Model):
     def set_password(self, password):
         self._password = generate_password_hash(password, method='sha512')
       
-    def is_password(self, password):
+    def verify_password(self, password):
         result = check_password_hash(self._password, password)
         if result:
             return True

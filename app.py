@@ -1,19 +1,19 @@
-from flask import render_template, request, session, redirect, url_for, make_response  # import render_template from "public" flask libraries
+from flask import render_template, request, session, redirect, make_response
 
 from functools import wraps
 
-from backend import app, db  # Definitions initialization
-from backend.model.user import init_accounts
-from backend.model.students import init_students
-from backend.model.missions import init_missions
+from conservation import app, db
+from conservation.model.user import init_accounts
+from conservation.model.students import init_students
+from conservation.model.missions import init_missions
 
-from backend.model.user import User
-from backend.model.students import Student
-from backend.model.missions import Missions
+from conservation.model.user import User
+from conservation.model.students import Student
+from conservation.model.missions import Missions
 
-from backend.api.api import users_bp
-from backend.api.api import points_bp
-from backend.api.api import missions_bp
+from conservation.api.api import users_bp
+from conservation.api.api import points_bp
+from conservation.api.api import missions_bp
 
 app.register_blueprint(users_bp)
 app.register_blueprint(points_bp)
@@ -25,7 +25,7 @@ def init_db():
         db.create_all()
         init_accounts()
         init_students()
-        init_missions()
+        # init_missions()
 
 @app.after_request
 def add_cache_control(response):
@@ -58,23 +58,17 @@ def login():
         password = request.form.get('password')
 
         # Perform authentication logic using the provided credentials
+        
+        user = User.query.filter_by(_username = username).all()
 
-        try:
-            user = User.query.filter_by(_username = username).all()[0]
-        except:
-            return render_template('login.html', error="Invalid Credentials")
-
-
-        if user and user.is_password(password):
-            # Authentication successful, store user ID in the session
-            session['user_id'] = user.id
-            response = make_response(redirect('/'))
-            response.set_cookie('user_id', str(user.id))
-            return response
-        else:
-            # Authentication failed
-            
-            return render_template('login.html', error="Invalid Credentials")
+        if user:
+            if user[0].verify_password(password):
+                # Authentication successful, store user ID in the session   
+                session['user_id'] = user[0].id
+                response = make_response(redirect('/'))
+                response.set_cookie('user_id', str(user[0].id))
+                return response
+        return render_template('login.html', error="Invalid Credentials")
     else:
         # GET request, render the login page
         return render_template('login.html')
@@ -94,7 +88,19 @@ def profile():
 
 @app.route('/about')
 def about():
-    return render_template("about .html")
+    return render_template("about.html")
+
+@app.route('/history')
+def history():
+    return render_template("history.html")
+
+@app.route('/leaderboard')
+def leaderboard():
+    return render_template("leaderboard.html")
+
+@app.route('/tutorial')
+def tutorial():
+    return render_template("tutorial.html")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port="8133")
