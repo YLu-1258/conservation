@@ -1,0 +1,41 @@
+.grid {
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap:10px;
+    top: 20%;
+}
+
+.grid-item {
+    border-radius: 20px;
+    width: 25em;
+    height: 10em;
+    background-color: gold;
+    padding: 3em;
+    text-align: center;
+    flex-direction: row;
+    display: flex;
+}
+
+.small-flex-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.small-flex-item-1 {
+    font-size: 3em;
+    flex-grow: 2;
+    padding: 2px;
+    text-align: center;
+}
+
+.small-flex-item-2 {
+    padding: 2px;
+    text-align: center;
+}
+
+.large-flex-item {
+    flex-grow: 2;
+    padding: 2px;
+    text-align: center;
+}

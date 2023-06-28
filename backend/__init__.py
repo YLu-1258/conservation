@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from pathlib import Path
+from key import SECRET_KEY
 import os
 
 """
@@ -15,11 +16,10 @@ These object can be used throughout project.
 app = Flask(__name__)
 # Setup SQLAlchemy object and properties for the database (db)
 dbURI = 'sqlite:///' + os.path.join(os.getcwd(),'backend', 'volumes', 'users.db')
-print(dbURI)
 project_path = Path.cwd().as_posix()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
-app.secret_key = "8i2VvxY*%voI$hMdxrdj^09I!c4&Z9*r"
+app.secret_key = SECRET_KEY
 db = SQLAlchemy(app)
 Migrate(app, db)
 

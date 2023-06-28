@@ -4,6 +4,7 @@
 
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
 {% endblock %}
 
 {% block sidebar %}
@@ -37,7 +38,23 @@
 {% endblock %}  
   
 {% block content %}
-
+<div class="grid">
+    <div class="grid-item">
+        <div class="small-flex-container">
+            <div class="small-flex-item-1">500</div>
+            <div class="small-flex-item-2">points</div>
+        </div>
+        <div class="large-flex-item">Test</div>
+    </div>
+    <div class="grid-item">item</div>
+    <div class="grid-item">item</div>
+    <div class="grid-item">item</div>
+    <div class="grid-item">item</div>
+    <div class="grid-item">item</div>
+    <div class="grid-item">item</div>
+    <div class="grid-item">item</div>
+    <div class="grid-item">item</div>  
+</div>
 {% endblock %}
 
 {% block footer %}

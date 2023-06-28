@@ -42,6 +42,18 @@ def get_user_by_name(username):
     except:
         return
     
+def get_points_by_name(username):
+    try:
+        return Student.query.filter_by(_username=username).all()[0]
+    except:
+        return
+    
+def get_mission_by_name(name):
+    try:
+        return Missions.query.filter_by(_name=name).all()[0]
+    except:
+        return
+    
 def get_points_by_id(id):
     try:
         return Student.query.filter_by(_uuid=id).all()[0]
@@ -66,33 +78,59 @@ class UsersAPI(Resource):
     def get(self):
         username = request.get_json().get("username")
         if not username:
-            return [user.to_dict() for user in get_all_user_list()]
+            try:
+                return [user.to_dict() for user in get_all_user_list()]
+            except Exception as e:
+                return {"message": f"server error: {e}"}, 500
         
         user = get_user_by_name(username)
-        if user:
+        try:
             return user.to_dict()
-        return {"message": "User not found"}, 404
+        except Exception as e:
+            return {"message": f"server error: {e}"}, 500
     
     def post(self):
         username = request.get_json().get("username")
         password = request.get_json().get("password")
         role = int(request.get_json().get("role"))
-        obj = User(username, password, role, 0, 0)
         try:
-            db.session.add(obj)
-            db.session.commit()
-            return obj.to_dict(), 201
+            objects = [User(username, password, role, 0, 0)]
+            if role == 2:
+                user_id = objects[0].id
+                objects.append(Student(user_id, username, None, 0, 0))
+            for obj in objects:
+                db.session.add(obj)
+                db.session.commit()
+            return [obj[0].to_dict(), obj[1].to_dict()], 201
         except Exception as e:
             db.session.rollback()
             return {"message": f"server error: {e}"}, 500
         
     def put(self):
-        pass
+        username = request.get_json().get("username")
+        password = request.get_json().get("password")
+        role = int(request.get_json().get("role"))
+        
+        user = get_user_by_name(username)
+        try:
+            return user.update(username, password, role)
+        except Exception as e:
+            return {"message": f"server error: {e}"}, 500
 
     def delete(self):
-        pass
+        username = request.get_json().get("username")
+
+        user = get_user_by_name(username)
+        points = get_points_by_name(username)
+        if points:
+            points.delete()
+        try:
+            user.delete()
+            return {"message": f"user \"{username}\"deleted"}, 200
+        except Exception as e:
+            return {"message": f"server error: {e}"}, 500
         
-class PointsAPI(Resource):
+class PointsAPI(Resource): # POST request for creating object should be handeled upon user creation
     # We want to retrieve points for a user
     def get(self):
         username = request.get_json().get("username")
@@ -102,41 +140,50 @@ class PointsAPI(Resource):
                 user_points = get_points_by_id(user.id)
                 if user_points:
                     points_list.append({user_points._username: {"points": user_points._points, "levels": user_points._levels}})
-            return points_list
+            try:
+                return points_list
+            except Exception as e:
+                return {"message": f"server error: {e}"}, 500
+            
         student = get_points_by_id(get_user_by_name(username).id)
-        if student:
+        try:
             return {student._username:{"points":student._points, "levels":student._levels}}
-        return {"message": student}, 404
+        except Exception as e:
+            return {"message": f"server error: {e}"}, 500
     
-    def post(self):
+    def put(self):
         username = request.get_json().get("username")
         points = int(request.get_json().get("points"))
-        if not username:
-            return {"message": "No user provided"}, 404
-        student = get_points_by_id(get_user_by_name(username).id)
-        if (student._points + points) >= 1000:
-            # If level up
-            total_points = student._points + points
-            levels_to_add = total_points // 1000
-            points_remaining = total_points % 1000
-            student.update_points(points_remaining, student._levels + levels_to_add)
-            return student.read()
-        elif (student._points + points >= 0):
-            # If same level
-            student.update_points(student._points + points, student._levels)
-            return student.read()
-        else:
-            # If lose points
-            total_difference = abs(student._points - points)
-            levels_to_subtract = total_difference // 1000 + 1
-            points_to_subtract = total_difference % 1000
-            if (student._points - points < 0):
-                # decrease level
-                student.update_points(1000 - points_to_subtract, student._levels - levels_to_subtract)
-            else:
+        try:
+            if not username:
+                return {"message": "No user provided"}, 404
+            student = get_points_by_name(username) # student = get_points_by_id(get_user_by_name(username).id)
+            if (student._points + points) >= 1000:
+                # If level up
+                total_points = student._points + points
+                levels_to_add = total_points // 1000
+                points_remaining = total_points % 1000
+                student.update_points(points_remaining, student._levels + levels_to_add)
+                return student.read()
+            elif (student._points + points >= 0):
                 # If same level
-                student.update_points(student._points - points_to_subtract, student._levels)
-            return student.read()
+                student.update_points(student._points + points, student._levels)
+                return student.read()
+            else:
+                # If lose points
+                total_difference = abs(student._points - points)
+                levels_to_subtract = total_difference // 1000 + 1
+                points_to_subtract = total_difference % 1000
+                if (student._points - points < 0):
+                    # decrease level
+                    student.update_points(1000 - points_to_subtract, student._levels - levels_to_subtract)
+                else:
+                    # If same level
+                    student.update_points(student._points - points_to_subtract, student._levels)
+                return student.read()
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"server error: {e}"}, 500
 
 class MissionsAPI(Resource):
     def get(self):
@@ -144,14 +191,43 @@ class MissionsAPI(Resource):
         if not id:
             return get_all_missions()
         mission_obj = get_mission_by_id(id)
-        if mission_obj:
+        try:
             res = mission_obj.read()
             return res
+        except Exception as e:
+            return {"message": f"server error: {e}"}, 500
         
-    def post(self):
-        pass
+    def post(self): # name, value, visibility, description, time, location
+        name = request.get_json().get("name")
+        value = request.get_json().get("value")
+        visibility = request.get_json().get("visiblity")
+        description = request.get_json().get("description")
+        time = request.get_json().get("time")
+        location = request.get_json().get("location")
+        value, time = int(value), int(time)
+        try:
+            obj = Missions(name, value, visibility, description, time, location)
+            db.session.add(obj)
+            db.session.commit()
+            return obj.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"server error: {e}"}, 500
 
     def put(self):
+        id = int(request.get_json().get("id"))
+        name = request.get_json().get("name")
+        value = request.get_json().get("value")
+        visibility = request.get_json().get("visiblity")
+        description = request.get_json().get("description")
+        time = request.get_json().get("time")
+        location = request.get_json().get("location")
+        try:
+            mission_obj = get_mission_by_id(id)
+            return mission_obj.update(name, value, visibility, description, time, location)
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"server error: {e}"}, 500
         pass
 
     def delete(self):
@@ -162,8 +238,8 @@ class MissionsAPI(Resource):
             return "Mission successfully deleted", 200
         mission_obj = get_mission_by_id(id)
         if mission_obj:
-            res = mission_obj.read()
-            return res
+            res = mission_obj.delete()
+            return ""
         pass
 
 users_api.add_resource(UsersAPI, "/")

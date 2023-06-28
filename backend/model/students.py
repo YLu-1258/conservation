@@ -8,7 +8,7 @@ class Student(db.Model):
     __tablename__ = 'student_info'
     id = Column(Integer, primary_key=True)
     _uuid = db.Column(Integer, db.ForeignKey('user_info.id'))
-    _uuaid = Column(Integer, db.ForeignKey('user_info.id'))
+    _uuaid = Column(Integer, db.ForeignKey('user_info.id'), nullable=True)
     _username = Column(Text, unique=True, nullable=False)
     _points = Column(Integer, nullable=False)
     _levels = Column(Integer, nullable=False)

@@ -104,15 +104,16 @@ class Missions(db.Model):
         }
 
     def update(self, name="", value="", visibility="", description ="", time="", location=""):
-        value, time= int(value), int(time)
         if len(name) >= 3:
             self._name = name
-        self._value = value
-        self._visibility = visibility
+        if value:
+            self._value = int(value)
+        if visibility:
+            self._visibility = visibility
         if description:
             self._description = description
         if time:
-            self._time = time
+            self._time = int(time)
         if location:
             self._location = location
         db.session.commit()
