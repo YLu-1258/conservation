@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend import db
-
+from backend.helpers import cast_int
 
 class Student(db.Model):
     __tablename__ = 'student_info'
@@ -14,11 +14,11 @@ class Student(db.Model):
     _levels = Column(Integer, nullable=False)
     
     def __init__(self, _uuid, username, _uuaid, points, levels):
-        self._uuid = _uuid
+        self._uuid = cast_int(_uuid)
         self._username = username
-        self._uuaid = _uuaid
-        self._points = points
-        self._levels = levels
+        self._uuaid = cast_int(_uuaid)
+        self._points = cast_int(points)
+        self._levels = cast_int(levels)
 
     def __repr__(self):
         return "<student(_uuid='%s', username='%s', _uuaid='%s', points='%s', levels='%s')>" % (
@@ -71,7 +71,7 @@ class Student(db.Model):
     # Traditional set/getter for password updates
 
     def to_dict(self):
-        return {"_uuid": self.id, "username": self._username, "_uuaid": self._uuaid, "points": self._points, "levels": self._levels}
+        return {"_uuid": self._uuid, "username": self._username, "_uuaid": self._uuaid, "points": self._points, "levels": self._levels}
     
     def create(self):
         try:
@@ -93,17 +93,16 @@ class Student(db.Model):
         }
 
     def update(self, username, uuaid="", points ="", levels=""):
-        role, points, levels = int(role), int(points), int(levels)
         if len(username) >= 3:
             self._username = username
         if uuaid:
-            self._uuaid = uuaid
+            self._uuaid = cast_int(uuaid)
         if points:
-            self._points = points
+            self._points = cast_int(points)
         if levels:
-            self._levels = levels
+            self._levels = cast_int(levels)
         db.session.commit()
-        return self
+        return self.read()
     
     def update_points(self, points, levels):
         self._points = points

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.exc import IntegrityError
+from backend.helpers import cast_int
 from backend import db
 
 
@@ -7,18 +8,18 @@ class Missions(db.Model):
     __tablename__ = 'event_missions'
     id = Column(Integer, primary_key=True)
     _name = Column(Text, nullable=False)
-    _value = Column(Integer, nullable=False)
-    _visibility = Column(Integer, nullable=False)                 # broadcast = all users can see, else, store csv of advisors who assigned it
-    _description = Column(Integer, nullable=False)
-    _time = Column(Integer, nullable=False)                       # Store as Unix Time
-    _location = Column(Text, nullable=False)
+    _value = Column(Integer, nullable=True)
+    _visibility = Column(Integer, nullable=False)                 # -1 = broadcast = all users can see, else, store csv of advisors who assigned it
+    _description = Column(Integer, nullable=True)
+    _time = Column(Integer, nullable=True)                       # Store as Unix Time
+    _location = Column(Text, nullable=True)
     
     def __init__(self, name, value, visibility, description, time, location):
         self._name = name
-        self._value = value
-        self._visibility = visibility
+        self._value = cast_int(value)
+        self._visibility = cast_int(visibility)
         self._description = description
-        self._time = time
+        self._time = cast_int(time)
         self._location = location
     
     def __repr__(self):
@@ -81,7 +82,7 @@ class Missions(db.Model):
         self._location = value
 
     def to_dict(self):
-        return {"name": self.name, "value": self._value, "visibility": self._visibility, "description": self._description, "time": self._time, "location": self._location}
+        return {"name": self._name, "value": self._value, "visibility": self._visibility, "description": self._description, "time": self._time, "location": self._location}
     
     def create(self):
         try:
@@ -95,6 +96,7 @@ class Missions(db.Model):
 
     def read(self):
         return {
+            "id": self.id, 
             "name": self._name, 
             "value": self._value, 
             "visibility": self._visibility, 
@@ -107,17 +109,17 @@ class Missions(db.Model):
         if len(name) >= 3:
             self._name = name
         if value:
-            self._value = int(value)
+            self._value = cast_int(value)
         if visibility:
-            self._visibility = visibility
+            self._visibility = cast_int(visibility)
         if description:
             self._description = description
         if time:
-            self._time = int(time)
+            self._time = cast_int(time)
         if location:
             self._location = location
         db.session.commit()
-        return self
+        return self.read()
 
 
     def delete(self):
@@ -126,7 +128,7 @@ class Missions(db.Model):
         return None
     
 def init_missions():
-    test_missions = [Missions("Nepal", 5000, "broadcast", "Alleviate education for children", -1, "Nepal")]
+    test_missions = [Missions("Nepal", 5000, -1, "Alleviate education for children", -1, "Nepal")]
     for mission in test_missions:
         try:
             mission_object = mission.create()

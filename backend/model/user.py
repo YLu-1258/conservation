@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend import db
+from backend.helpers import cast_int
 
 
 class User(db.Model):
@@ -14,7 +15,7 @@ class User(db.Model):
     def __init__(self, username, password, role):
         self._username = username
         self.set_password(password)
-        self._role = role
+        self._role = cast_int(role)
     
     def __repr__(self):
         return "<user(username='%s', role='%s')>" % (
@@ -70,15 +71,15 @@ class User(db.Model):
         }
 
     def update(self, username="", password="", role=""):
-        role = int(role)
+        role = cast_int(role)
         if len(username) >= 3:
             self._username = username
         if len(password) >= 8:
             self.set_password(password)
-        if role >= 0 and role <= 2:
+        if role and role >= 0 and role <= 2:
             self._role = role
         db.session.commit()
-        return self
+        return self.read()
 
     def delete(self):
         db.session.delete(self)
