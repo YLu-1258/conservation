@@ -5,6 +5,7 @@
 {% block head %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}
 
 {% block sidebar %}
@@ -17,8 +18,75 @@
   
 {% block content %}
     <div class="login-page">
-
+        <h1 class="login-header">Login</h1>
+        <hr class="login-header-divider">
+        <div class="login-wrapper">
+            {% if error %}
+            <div class="error-message"> <i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+            {% endif %}
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-field" required>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-field" required>
+                </div>
+                <br>
+                <div class="options-container">
+                    <label class="container"> Stay logged in?
+                        <input type="checkbox" onclick="">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="form-group">
+                        <button id="submit-button" type="submit" value="Login" class="form-btn" disabled="true">Submit</button>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
     </div>
+    <script>
+        var inputs = document.querySelectorAll('.form-field');
+        var submit_button = document.getElementById("submit-button")
+        console.log(submit_button);
+        var isAllFilled = false;
+        function check_if_all_filled() {
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].value === '') {
+                    submit_button.classList.remove('filled');
+                    submit_button.setAttribute("disabled", "true")
+                    return;
+                }
+                
+            }
+            submit_button.removeAttribute("disabled")
+            submit_button.classList.add('filled');
+            
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener('focus', function() {
+                    this.parentNode.classList.add('focused');
+                });
+
+                inputs[i].addEventListener('blur', function() {
+                    var inputValue = this.value;
+                    if (inputValue === '') {
+                        this.classList.remove('filled');
+                        this.parentNode.classList.remove('focused');
+                        check_if_all_filled();
+                    } else {
+                        this.classList.add('filled');
+                        check_if_all_filled();
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}
 
 {% block footer %}

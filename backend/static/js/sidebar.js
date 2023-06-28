@@ -9,7 +9,10 @@ const toggleSidebar = () => {
         }
         sidebar.style.width = "250px";
         document.getElementById("main").style.marginLeft = "250px";
-        document.getElementById("openbtn").style.color="#00da3e";
+        document.getElementById("header").style.marginLeft = "250px";
+        document.getElementById("footer").style.marginLeft = "250px";
+        document.getElementById("openbtn").style.backgroundColor="#ffffff";
+        document.getElementById("openbtn").style.color = "#000000";
     } else {
         var elements = document.querySelectorAll(".sidebar-link");
         for (var i = 0; i < elements.length; i++) {
@@ -17,6 +20,9 @@ const toggleSidebar = () => {
         }
         sidebar.style.width = "0";
         document.getElementById("main").style.marginLeft = "0";
-        document.getElementById("openbtn").style.color="#2b9348";
+        document.getElementById("header").style.marginLeft = "0";
+        document.getElementById("footer").style.marginLeft = "0";
+        document.getElementById("openbtn").style.backgroundColor="transparent";
+        document.getElementById("openbtn").style.color = "#ffffff";
     }
 };

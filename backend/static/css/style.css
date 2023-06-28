@@ -2,9 +2,8 @@
 @import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
 
 html, body {
-    background-image: linear-gradient(90deg, #00c362, #00dd88, #06da57);
     background-size: 800% 800%;
-    animation: main-gradient 15s ease infinite;
+    animation: main-gradient 20s ease infinite;
     height: 100%;
     margin: 0;
 }
@@ -18,13 +17,13 @@ header {
     flex: 0 0 auto;
     width: 100%;
     height: 10%;
-    background-color: #48f178;
+    background-color: transparent;
 }
 
 footer {
     flex: 0 0 auto;
     height: 10%;
-    background-color: #2b9348;
+    background-color: transparent;
 }
 
 main {
@@ -42,24 +41,25 @@ main {
     position: relative;
     flex-grow: 1;
     overflow-y: auto;
+    background-color: transparent;
 }
 
 
 @keyframes main-gradient {
     0% {
-        background-position: 0% 50%;
+        background-color: #424242;
     }
-    20% {
-        background-position: 50% 50%;
+    25% {
+        background-color: #292929;
     }
-    40% {
-        background-position: 100% 50%;
+    50% {
+        background-color: #0c0c0c;
     }
-    60% {
-        background-position: 50% 50%;
+    75% {
+        background-color: #333333;
     }
-     100% {
-        background-position: 0% 50%;
+    100% {
+        background-color: #424242;
     }
 }
 

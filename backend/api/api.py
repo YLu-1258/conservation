@@ -61,6 +61,12 @@ def get_points_by_id(id):
     except:
         return
     
+def get_user_by_id(uid):
+    try:
+        return User.query.filter_by(id=uid).all()[0]
+    except:
+        return
+    
 def get_all_missions():
     print("Missions: ", [mission.read() for mission in Missions.query.all()])
     try:
@@ -77,14 +83,14 @@ def get_mission_by_id(id):
 
 class UsersAPI(Resource):
     def get(self):
-        username = request.get_json().get("username")
-        if not username:
+        id = cast_int(request.args.get("user_id"))
+        if id == -1:
             try:
                 return [user.to_dict() for user in get_all_user_list()]
             except Exception as e:
                 return {"message": f"server error: {e}"}, 500
         
-        user = get_user_by_name(username)
+        user = get_user_by_id(id)
         try:
             return user.to_dict()
         except Exception as e:
@@ -140,11 +146,11 @@ class UsersAPI(Resource):
 class PointsAPI(Resource): # POST request for creating object should be handeled upon user creation
     # We want to retrieve points for a user
     def get(self):
-        username = request.get_json().get("username")
-        if not username:
+        id = request.args.get("userid")
+        if not id:
             points_list = []
             for user in get_all_user_list():
-                user_points = get_points_by_id(user.id)
+                user_points = get_points_by_id(id)
                 if user_points:
                     points_list.append({user_points._username: {"points": user_points._points, "levels": user_points._levels}})
             try:
@@ -152,7 +158,7 @@ class PointsAPI(Resource): # POST request for creating object should be handeled
             except Exception as e:
                 return {"message": f"server error: {e}"}, 500
             
-        student = get_points_by_name(username)
+        student = get_points_by_id(id)
         try:
             return {student._username:{"points":student._points, "levels":student._levels}}
         except Exception as e:
@@ -196,7 +202,7 @@ class PointsAPI(Resource): # POST request for creating object should be handeled
 
 class MissionsAPI(Resource):
     def get(self):
-        id = request.get_json().get("id")
+        id = request.args.get("id")
         if not id:
             return get_all_missions()
         mission_obj = get_mission_by_id(id)
