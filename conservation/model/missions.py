@@ -82,7 +82,13 @@ class Missions(db.Model):
         self._location = value
 
     def to_dict(self):
-        return {"name": self._name, "value": self._value, "visibility": self._visibility, "description": self._description, "time": self._time, "location": self._location}
+        return {"id": self.id,
+                "name": self._name, 
+                "value": self._value, 
+                "visibility": self._visibility, 
+                "description": self._description, 
+                "time": self._time, 
+                "location": self._location}
     
     def create(self):
         try:

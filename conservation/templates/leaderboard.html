@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Wildlife Conservation{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block sidebar %}
+<button class="openbtn" id="openbtn" onclick="toggleSidebar()">&#9776; Sidebar</button>
+<div id="mySidebar" class="sidebar">
+    <div class="user-profile">
+        <img src="../static/images/user.png" alt="User Avatar" class="avatar">
+        <p class="username" id="display-name">John Doe</span>
+    </div>
+    <a href="/" class="sidebar-link" aria-disabled="true" ><i class="fas fa-home"></i> Missions</a>
+    <a href="/history" class="sidebar-link"><i class="fas fa-history"></i> History </a>
+    <a href="#" class="sidebar-link-current"><i class="fas fa-trophy" style="color: #ffffff;"></i> Leaderboard</a>
+    <a href="/tutorial" class="sidebar-link"><i class="fas fa-question-circle"></i> Help/Tutorial </a>
+    <a href="/login" class="sidebar-link"><i class="fas fa-sign-in-alt"></i> Log in</a>
+    <a href="/logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+</div>
+<script>
+    var profile_name = document.getElementById("display-name");
+    profile_name.innerHTML = user_info["username"];
+</script>
+{% endblock %}
+
+{% block header %}
+=
+{% endblock %}  
+  
+{% block content %}
+=
+{% endblock %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        user_id = parseInt(get_cookie("user_id"));
+        const user_info = retrieve_user_information(user_id);
+        console.log(user_info);
+    });
+</script>
+
+{% block footer %}
+<p class="footer-text">2023 Alexander Lu</p>
+{% endblock %}

@@ -6,6 +6,8 @@ html, body {
     animation: main-gradient 20s ease infinite;
     height: 100%;
     margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 body {
@@ -127,23 +129,3 @@ main {
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
 }
-
-.accordion {
-    border: 1px solid #ccc;
-}
-  
-.accordion-item {
-    border-bottom: 1px solid #ccc;
-}
-  
-.accordion-header {
-    background-color: #f5f5f5;
-    padding: 10px;
-    cursor: pointer;
-}
-  
-.accordion-content {
-    display: none;
-    padding: 10px;
-}
-  

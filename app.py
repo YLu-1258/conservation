@@ -73,6 +73,31 @@ def login():
         # GET request, render the login page
         return render_template('login.html')
     
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # If we receive a form input from the frontend
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Perform authentication logic using the provided credentials
+        
+        exist = User.query.filter_by(_username = username).all()
+
+        if exist:
+             return render_template('register.html', error="Username Exists")
+        
+        user = User(username, password, 2)
+        user.create()
+        uuid = user = User.query.filter_by(_username = username).all()[0].id
+        print(uuid)
+        student = Student(uuid, username, None, 0, 0)
+        student.create()
+        return render_template('login.html', notif=f'Standard User "{username}" created')
+    else:
+        # GET request, render the login page
+        return render_template('register.html')
+    
 @app.route('/logout')
 def logout():
     # Clear the user's session data

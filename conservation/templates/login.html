@@ -24,6 +24,9 @@
             {% if error %}
             <div class="error-message"> <i class="fas fa-exclamation-circle"></i> {{ error }}</div>
             {% endif %}
+            {% if notif %}
+            <div class="notif"> <i class="fas fa-exclamation-circle"></i> {{ notif }}</div>
+            {% endif %}
             <form method="POST" action="/login">
                 <div class="form-group">
                     <label class="form-label" for="username">Username</label>
@@ -40,9 +43,8 @@
                         <input type="checkbox" onclick="">
                         <span class="checkmark"></span>
                     </label>
-                    <div class="form-group">
-                        <button id="submit-button" type="submit" value="Login" class="form-btn" disabled="true">Submit</button>
-                    </div>
+                    <button id="register-button" onclick="location.href='/register';" class="form-btn">Register</button>
+                    <button id="submit-button" type="submit" value="Login" class="form-btn" disabled="true">Submit</button>
                 </div>
                 
             </form>

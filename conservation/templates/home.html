@@ -5,6 +5,7 @@
 {% block head %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 {% endblock %}
 
 {% block sidebar %}
@@ -40,26 +41,167 @@
         textElement.classList.add('hide-cursor');
         });
     </script>
+    
 {% endblock %}  
-  
+
 {% block content %}
+<i class="fas fa-chevron-left" style="color: #ffffff;" onclick="decrement_page()" ></i>
 <div class="grid">
-    <div class="grid-item">
-        <div class="small-flex-container">
-            <div class="small-flex-item-1">500</div>
-            <div class="small-flex-item-2">points</div>
+    <div class="grid-item" id="mission0">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
         </div>
-        <div class="large-flex-item">Test</div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
     </div>
-    <div class="grid-item">item</div>
-    <div class="grid-item">item</div>
-    <div class="grid-item">item</div>
-    <div class="grid-item">item</div>
-    <div class="grid-item">item</div>
-    <div class="grid-item">item</div>
-    <div class="grid-item">item</div>
-    <div class="grid-item">item</div>  
+    <div class="grid-item" id="mission1">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
+    <div class="grid-item" id="mission2">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
+    <div class="grid-item" id="mission3">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
+    <div class="grid-item" id="mission4">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
+    <div class="grid-item" id="mission5">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
+    <div class="grid-item" id="mission6">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
+    <div class="grid-item" id="mission7">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
+    <div class="grid-item" id="mission8">
+        <div class="small-flex-container meta-info">
+            <div class="small-flex-item point-value">500</div>
+            <div class="small-flex-item advisor-name">points</div>
+        </div>
+        <div class="vl"></div>
+        <div class="small-flex-container main-mission">
+            <div class="small-flex-item mission-name">Nepal</div>
+            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+        </div>
+    </div>
 </div>
+<i class="fas fa-chevron-right" style="color: #ffffff;" onclick="increment_page()"></i>
+
+<div id="event-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="modal-close">&times;</span>
+        <div class="mission-info-container">
+            <div class="mission-info">
+                <p><i class="fas fa-globe-americas"></i> 500</p>
+            </div>
+            <div class="mission-info">
+                <p><i class="far fa-eye"></i> broadcast</p>
+            </div>
+            <div class="mission-info">
+                <p><i class="far fa-clock"></i> 7:00PM</p>
+            </div>
+            <div class="mission-info">
+                <p><i class="fas fa-map-marker-alt"></i> Nepal</p>
+            </div>
+        </div>
+        <h1 class="mission-title">Nepal</h1>
+        <hr>
+        <p>This is the modal content.</p>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+    // Get the modal element
+    var modal = document.getElementById("event-modal");
+
+    // Get the div elements to open the modal
+    var divs = document.getElementsByClassName("grid-item");
+
+    // Get the close button
+    var close_button = document.getElementById("modal-close");
+
+    // Open the modal when a div is clicked
+    for (var i = 0; i < divs.length; i++) {
+        divs[i].addEventListener("click", function() {
+            modal.style.display = "block";
+        });
+    }
+
+    // Close the modal when the close button is clicked
+    close_button.addEventListener("click", function() {
+        modal.style.display = "none";
+    });
+
+    // Close the modal when clicking outside the modal
+    window.addEventListener("click", function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+</script>
 {% endblock %}
 
 <script>
@@ -69,6 +211,8 @@
         console.log(user_info);
     });
 </script>
+
+
 
 {% block footer %}
 <p class="footer-text">2023 Alexander Lu</p>

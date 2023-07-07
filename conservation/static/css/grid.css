@@ -10,9 +10,9 @@
     border-radius: 20px;
     width: 25em;
     height: 10em;
-    background-color: gold;
-    padding: 3em;
-    text-align: center;
+    background-color: rgb(78, 174, 212);
+    padding: 1em;
+    margin: 1em;
     flex-direction: row;
     display: flex;
 }
@@ -20,22 +20,47 @@
 .small-flex-container {
     display: flex;
     flex-direction: column;
+    width: 33%;
+    justify-content: flex-start;
 }
 
-.small-flex-item-1 {
-    font-size: 3em;
+.small-flex-item {
+    padding: 1px;
+}
+
+.main-mission {
     flex-grow: 2;
-    padding: 2px;
+    padding-left: 1em;
+}
+
+.meta-info {
     text-align: center;
 }
 
-.small-flex-item-2 {
-    padding: 2px;
-    text-align: center;
+.vl {
+    border-left: 6px solid rgb(241, 241, 241);
+    height: 100%;
 }
 
-.large-flex-item {
-    flex-grow: 2;
-    padding: 2px;
-    text-align: center;
+.point-value {
+    font-size: 2em;
+    color: white;
+}
+
+.advisor-name {
+    font-size: 1em;
+    color: white;
+}
+
+.mission-name {
+    font-weight: 900;
+    color: white;
+    text-align: left;
+    align-self: flex-start;
+}
+
+.mission-description {
+    color: white;
+    text-align: left;
+    align-self: flex-start;
 }

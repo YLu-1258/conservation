@@ -81,18 +81,33 @@ def get_mission_by_id(id):
     except:
         return
 
+def get_mission_by_visibility(uuaid):
+    try:
+        return [mission.to_dict() for mission in Missions.query.filter_by(_visibility=uuaid).all()]
+    except:
+        return []
+    
+def get_uuaid_for_user(id):
+    try:
+        return Student.query.filter_by(_uuid=id).first().to_dict()["_uuaid"]
+    except:
+        return
+
 class UsersAPI(Resource):
     def get(self):
         id = cast_int(request.args.get("user_id"))
         if id == -1:
+            return {"username":"broadcast"}
+        elif id == -2:
             try:
                 return [user.to_dict() for user in get_all_user_list()]
             except Exception as e:
                 return {"message": f"server error: {e}"}, 500
         
-        user = get_user_by_id(id)
+        user = get_user_by_id(id).to_dict()
+        user["uuaid"] = get_uuaid_for_user(id)
         try:
-            return user.to_dict()
+            return user
         except Exception as e:
             return {"message": f"server error: {e}"}, 500
     
@@ -207,8 +222,7 @@ class MissionsAPI(Resource):
             return get_all_missions()
         mission_obj = get_mission_by_id(id)
         try:
-            res = mission_obj.read()
-            return res
+            return mission_obj.read()
         except Exception as e:
             return {"message": f"server error: {e}"}, 500
         
@@ -258,6 +272,17 @@ class MissionsAPI(Resource):
             db.session.rollback()
             return {"message": f"server error: {e}"}, 500
 
+class RetrieveMissionsAPI(Resource):
+    def get(self):
+        uuaid = cast_int(request.args.get("uuaid"))
+        if not uuaid:
+            return sorted(get_mission_by_visibility(-1), key = lambda m: m["value"], reverse=True)
+        visible_missions = sorted(get_mission_by_visibility(uuaid) + get_mission_by_visibility(-1), key = lambda m: m["value"], reverse=True)
+        return visible_missions
+
+        
+
 users_api.add_resource(UsersAPI, "/")
 points_api.add_resource(PointsAPI, "/")
 missions_api.add_resource(MissionsAPI, "/")
+missions_api.add_resource(RetrieveMissionsAPI, "/retrieve")
