@@ -71,7 +71,11 @@ class Student(db.Model):
     # Traditional set/getter for password updates
 
     def to_dict(self):
-        return {"_uuid": self._uuid, "username": self._username, "_uuaid": self._uuaid, "points": self._points, "levels": self._levels}
+        return {"_uuid": self._uuid, 
+                "username": self._username, 
+                "_uuaid": self._uuaid, 
+                "points": self._points, 
+                "levels": self._levels}
     
     def create(self):
         try:
@@ -81,16 +85,6 @@ class Student(db.Model):
         except IntegrityError:
             db.session.remove()
             return None
-
-
-    def read(self):
-        return {
-            "uuid": self._uuid,
-            "username": self._username,
-            "uuaid": self._uuaid,
-            "points": self._points,
-            "levels": self._levels
-        }
 
     def update(self, username, uuaid="", points ="", levels=""):
         if len(username) >= 3:

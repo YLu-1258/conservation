@@ -27,7 +27,18 @@
 {% endblock %}
 
 {% block header %}
-=
+<div>
+    <h1 class="line-1 anim-typewriter">
+        Leaderboard
+    </h1>
+</div>
+<script>
+    const textElement = document.querySelector('.line-1');
+
+    textElement.addEventListener('animationend', () => {
+    textElement.classList.add('hide-cursor');
+    });
+</script>
 {% endblock %}  
   
 {% block content %}

@@ -16,7 +16,25 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-    {% block sidebar %}{% endblock %}
+    <button class="openbtn" id="openbtn" onclick="toggleSidebar()">&#9776; Sidebar</button>
+    <div id="mySidebar" class="sidebar">
+        <div class="user-profile">
+            <img src="../static/images/user.png" alt="User Avatar" class="avatar">
+            <p class="username" id="display-name">John Doe</span>
+        </div>
+        <a href="#" class="sidebar-link hidden-link" id ="missions-link"></a>
+        <a href="#" class="sidebar-link hidden-link" id ="history-link"></a>
+        <a href="#" class="sidebar-link hidden-link" id ="leaderboard-link"></a>
+        <a href="#" class="sidebar-link hidden-link" id ="tutorial-link"></a>
+        <a href="#" class="sidebar-link hidden-link" id ="advisors-link"></a>
+        <a href="#" class="sidebar-link hidden-link" id ="admin-link"></a>
+        <a href="/login" class="sidebar-link"><i class="fas fa-sign-in-alt"></i> Log in</a>
+        <a href="/logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+    </div>
+    <script>
+        var profile_name = document.getElementById("display-name");
+        profile_name.innerHTML = user_info["username"];
+    </script>
 
     <header id="header">
         {% block header %}{% endblock %}
@@ -32,4 +50,14 @@
         {% block footer %}{% endblock %}
     </footer>
 </body>
+<script>
+    document.addEventListener('keydown', function(event) {
+        var modal = document.getElementById("event-modal");
+        // Check if the pressed key is the Escape key
+        if (event.key === 'Escape' && modal.style.display == "none") {
+            // Call your desired function here
+            toggleSidebar();
+        }
+    });
+</script>
 </html>

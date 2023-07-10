@@ -1,17 +1,20 @@
-from flask import Blueprint, request, jsonify
-from flask_restful import Api, Resource, reqparse
+from flask import Blueprint, request
+from flask_restful import Api, Resource
 from conservation import db
 from conservation.model.user import User
 from conservation.model.students import Student
 from conservation.model.missions import Missions
+from conservation.model.history import History
 from conservation.helpers import cast_int
 
 users_bp = Blueprint("users", __name__, url_prefix = "/api/users")
 points_bp = Blueprint("points", __name__, url_prefix = "/api/points")
 missions_bp = Blueprint("missions", __name__, url_prefix = "/api/missions")
+history_bp = Blueprint("history", __name__, url_prefix = "/api/history")
 users_api = Api(users_bp)
 points_api = Api(points_bp)
 missions_api = Api(missions_bp)
+history_api = Api(history_bp)
 
 def get_all_user_list():
     try:
@@ -68,10 +71,10 @@ def get_user_by_id(uid):
         return
     
 def get_all_missions():
-    print("Missions: ", [mission.read() for mission in Missions.query.all()])
+    print("Missions: ", [mission.to_dict() for mission in Missions.query.all()])
     try:
         
-        return [mission.read() for mission in Missions.query.all()]
+        return [mission.to_dict() for mission in Missions.query.all()]
     except:
         return
     
@@ -90,6 +93,24 @@ def get_mission_by_visibility(uuaid):
 def get_uuaid_for_user(id):
     try:
         return Student.query.filter_by(_uuid=id).first().to_dict()["_uuaid"]
+    except:
+        return
+    
+def get_completed_history_for_user(id):
+    try:
+        return [entry.to_dict() for entry in History.query.filter_by(_uuid=id, _progress=1).all()]
+    except:
+        return  
+
+def get_in_progress_history_for_user(id):
+    try:
+        return [entry.to_dict() for entry in History.query.filter_by(_uuid=id, _progress=0).all()]
+    except:
+        return  
+    
+def get_history_entry_by_id(id):
+    try:
+        return History.query.filter_by(id=id).first()
     except:
         return
 
@@ -193,11 +214,11 @@ class PointsAPI(Resource): # POST request for creating object should be handeled
                 levels_to_add = total_points // 1000
                 points_remaining = total_points % 1000
                 student.update_points(points_remaining, student._levels + levels_to_add)
-                return student.read()
+                return student.to_dict()
             elif (student.points + points >= 0):
                 # If same level
                 student.update_points(student._points + points, student._levels)
-                return student.read()
+                return student.to_dict()
             else:
                 # If lose points
                 print(student.points)
@@ -210,7 +231,7 @@ class PointsAPI(Resource): # POST request for creating object should be handeled
                 else:
                     # If same level
                     student.update_points(student._points - points_to_subtract, student._levels)
-                return student.read()
+                return student.to_dict()
         except Exception as e:
             db.session.rollback()
             return {"message": f"server error: {e}"}, 500
@@ -222,7 +243,7 @@ class MissionsAPI(Resource):
             return get_all_missions()
         mission_obj = get_mission_by_id(id)
         try:
-            return mission_obj.read()
+            return mission_obj.to_dict()
         except Exception as e:
             return {"message": f"server error: {e}"}, 500
         
@@ -280,9 +301,55 @@ class RetrieveMissionsAPI(Resource):
         visible_missions = sorted(get_mission_by_visibility(uuaid) + get_mission_by_visibility(-1), key = lambda m: m["value"], reverse=True)
         return visible_missions
 
+class HistoryAPI(Resource):
+    def get(self):
+        uuid = cast_int(request.args.get("user_id"))
+        if not uuid:
+            return []
+        response = {}
+        response["completed"] = get_completed_history_for_user(uuid)
+        response["in_progress"] = get_in_progress_history_for_user(uuid)
+        return response
+    
+    def post(self):
+        uuid = cast_int(request.get_json().get("uuid"))
+        name = request.get_json().get("name")
+        value = cast_int(request.get_json().get("value"))
+        visibility = request.get_json().get("visibility")
+        description = request.get_son().get("description")
+        time = cast_int(request.get_json().get("time"))
+        location = request.get_json().get("location")
+        progress = cast_int(request.get_json().get("progress"))
+
+        try:
+            obj = History(uuid, name, value, visibility, description, time, location, progress)
+            db.session.add(obj)
+            db.session.commit()
+            return obj.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"server error: {e}"}, 500
         
+    def put(self):
+        id = int(request.get_json().get("id"))
+        uuid = cast_int(request.get_json().get("uuid"))
+        name = request.get_json().get("name")
+        value = request.get_json().get("value")
+        visibility = request.get_json().get("visibility")
+        description = request.get_json().get("description")
+        time = request.get_json().get("time")
+        location = request.get_json().get("location")
+        progress = cast_int(request.get_json().get("progress"))
+        try:
+            mission_obj = get_mission_by_id(id)
+            return mission_obj.update(name, value, visibility, description, time, location)
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"server error: {e}"}, 500
+
 
 users_api.add_resource(UsersAPI, "/")
 points_api.add_resource(PointsAPI, "/")
 missions_api.add_resource(MissionsAPI, "/")
 missions_api.add_resource(RetrieveMissionsAPI, "/retrieve")
+history_api.add_resource(HistoryAPI, "/")

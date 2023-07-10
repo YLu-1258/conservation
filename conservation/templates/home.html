@@ -9,29 +9,13 @@
 {% endblock %}
 
 {% block sidebar %}
-<button class="openbtn" id="openbtn" onclick="toggleSidebar()">&#9776; Sidebar</button>
-<div id="mySidebar" class="sidebar">
-    <div class="user-profile">
-        <img src="../static/images/user.png" alt="User Avatar" class="avatar">
-        <p class="username" id="display-name">John Doe</span>
-    </div>
-    <a href="#" class="sidebar-link-current" aria-disabled="true" ><i class="fas fa-home" style="color: #ffffff;"></i> Missions</a>
-    <a href="/history" class="sidebar-link"><i class="fas fa-history"></i> History </a>
-    <a href="/leaderboard" class="sidebar-link"><i class="fas fa-trophy"></i> Leaderboard</a>
-    <a href="/tutorial" class="sidebar-link"><i class="fas fa-question-circle"></i> Help/Tutorial </a>
-    <a href="/login" class="sidebar-link"><i class="fas fa-sign-in-alt"></i> Log in</a>
-    <a href="/logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</div>
-<script>
-    var profile_name = document.getElementById("display-name");
-    profile_name.innerHTML = user_info["username"];
-</script>
+
 {% endblock %}
 
 {% block header %}
     <div>
         <h1 class="line-1 anim-typewriter">
-            Conservation: Our Duty, Their Future.
+            Missions
         </h1>
     </div>
     <script>
@@ -42,133 +26,135 @@
         });
     </script>
     
+    
 {% endblock %}  
 
 {% block content %}
-<i class="fas fa-chevron-left" style="color: #ffffff;" onclick="decrement_page()" ></i>
+
+<i class="fas fa-chevron-left" style="color: #ffffff;" onclick="null" id="left-button"></i>
 <div class="grid">
-    <div class="grid-item" id="mission0">
+    <div class="grid-item" id="mission0" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission1">
+    <div class="grid-item" id="mission1" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission2">
+    <div class="grid-item" id="mission2" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission3">
+    <div class="grid-item" id="mission3" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission4">
+    <div class="grid-item" id="mission4" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission5">
+    <div class="grid-item" id="mission5" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission6">
+    <div class="grid-item" id="mission6" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission7">
+    <div class="grid-item" id="mission7" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
-    <div class="grid-item" id="mission8">
+    <div class="grid-item" id="mission8" data-mission-id="0">
         <div class="small-flex-container meta-info">
-            <div class="small-flex-item point-value">500</div>
-            <div class="small-flex-item advisor-name">points</div>
+            <div class="small-flex-item point-value"></div>
+            <div class="small-flex-item advisor-name"></div>
         </div>
         <div class="vl"></div>
         <div class="small-flex-container main-mission">
-            <div class="small-flex-item mission-name">Nepal</div>
-            <div class="small-flex-item mission-description">Alleviate children's education in Nepal while creating curricula for local schools</div>
+            <div class="small-flex-item mission-name"></div>
+            <div class="small-flex-item mission-description"></div>
         </div>
     </div>
 </div>
-<i class="fas fa-chevron-right" style="color: #ffffff;" onclick="increment_page()"></i>
+<i class="fas fa-chevron-right" style="color: #ffffff;" onclick="increment_page()" id="right-button" ></i>
 
 <div id="event-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" id="modal-content">
         <span class="close" id="modal-close">&times;</span>
-        <div class="mission-info-container">
-            <div class="mission-info">
-                <p><i class="fas fa-globe-americas"></i> 500</p>
+        <div class="mission-info-container" id="mission-info-container">
+            <div class="mission-info" id="mission-points">
+                <p><i class="fas fa-globe-americas"></i> 0</p>
             </div>
-            <div class="mission-info">
-                <p><i class="far fa-eye"></i> broadcast</p>
+            <div class="mission-info" id="mission-visibility">
+                <p><i class="far fa-eye"></i> null</p>
             </div>
-            <div class="mission-info">
-                <p><i class="far fa-clock"></i> 7:00PM</p>
+            <div class="mission-info" id="mission-time">
+                <p><i class="far fa-clock"></i> 0000000000</p>
             </div>
-            <div class="mission-info">
-                <p><i class="fas fa-map-marker-alt"></i> Nepal</p>
+            <div class="mission-info" id="mission-location">
+                <p><i class="fas fa-map-marker-alt"></i> 0</p>
             </div>
         </div>
-        <h1 class="mission-title">Nepal</h1>
+        <h1 class="mission-title" id="mission-title">0</h1>
         <hr>
-        <p>This is the modal content.</p>
+        <p id="mission-description">No event</p>
     </div>
 </div>
 
@@ -176,6 +162,10 @@
 <script>
     // Get the modal element
     var modal = document.getElementById("event-modal");
+    console.log(modal);
+    var modal_content = modal.querySelector("#modal-content");
+    console.log(modal_content);
+    var modal_info = modal_content.querySelector("#mission-info-container");
 
     // Get the div elements to open the modal
     var divs = document.getElementsByClassName("grid-item");
@@ -183,11 +173,44 @@
     // Get the close button
     var close_button = document.getElementById("modal-close");
 
+    function update_modal_content(element) {
+        console.log("Element:");
+        console.log(element);
+        mission_id = element.getAttribute("data-mission-id");
+        let points = modal_info.querySelector("#mission-points");
+        let visibility = modal_info.querySelector("#mission-visibility");
+        let time = modal_info.querySelector("#mission-time");
+        let location = modal_info.querySelector("#mission-location");
+        let title = modal_content.querySelector("#mission-title");
+        let description = modal_content.querySelector("#mission-description");
+        if (mission_id == 0){
+            points.innerHTML = "";
+            visibility.innerHTML = "";
+            time.innerHTML = "";
+            location.innerHTML = "";
+            title.innerHTML = "";
+            description.innerHTML = "";
+            return;
+        }
+        mission_json = http_get(base_url + "api/missions?id=" + mission_id)
+
+        
+
+        points.innerHTML = '<i class="fas fa-globe-americas"></i> ' + mission_json["value"];
+        visibility.innerHTML = '<i class="far fa-eye"></i> ' + http_get(base_url + "api/users?user_id=" + mission_json["visibility"])["username"];
+        time.innerHTML = '<i class="far fa-clock"></i> ' + mission_json["time"];
+        location.innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + mission_json["location"];
+        title.innerHTML = mission_json["name"];
+        description.innerHTML = mission_json["description"];
+    }
     // Open the modal when a div is clicked
     for (var i = 0; i < divs.length; i++) {
-        divs[i].addEventListener("click", function() {
+        (function(index) {
+            divs[index].addEventListener("click", function() {
             modal.style.display = "block";
-        });
+            update_modal_content(divs[index]);
+            });
+        })(i);
     }
 
     // Close the modal when the close button is clicked
@@ -198,6 +221,12 @@
     // Close the modal when clicking outside the modal
     window.addEventListener("click", function(event) {
         if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    window.addEventListener("keydown", function(event) {
+        if (event.key === 'Escape') {
             modal.style.display = "none";
         }
     });

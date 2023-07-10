@@ -57,6 +57,13 @@
     margin-left: 50px;
 }
 
+.hidden-link {
+    visibility: hidden !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 .openbtn {
     font-size: 1rem;
     font-family: 'Courier New', Courier, monospace;

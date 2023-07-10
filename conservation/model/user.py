@@ -51,7 +51,9 @@ class User(db.Model):
             return False
 
     def to_dict(self):
-        return {"uuid": self.id, "username": self._username, "role": self._role}
+        return {"uuid": self.id, 
+                "username": self._username, 
+                "role": self._role}
     
     def create(self):
         try:
@@ -61,14 +63,6 @@ class User(db.Model):
         except IntegrityError:
             db.session.remove()
             return None
-
-
-    def read(self):
-        return {
-            "uuid": self.id,
-            "username": self._username,
-            "role": self._role
-        }
 
     def update(self, username="", password="", role=""):
         role = cast_int(role)

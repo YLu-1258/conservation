@@ -35,11 +35,11 @@ class Missions(db.Model):
     
     @property
     def name(self):
-        return self.name
+        return self._name
 
     @name.setter
     def name(self, value):
-        self.name = value
+        self._name = value
 
     @property
     def value(self):
@@ -98,18 +98,6 @@ class Missions(db.Model):
         except IntegrityError:
             db.session.remove()
             return None
-
-
-    def read(self):
-        return {
-            "id": self.id, 
-            "name": self._name, 
-            "value": self._value, 
-            "visibility": self._visibility, 
-            "description": self._description, 
-            "time": self._time, 
-            "location": self._location
-        }
 
     def update(self, name="", value="", visibility="", description ="", time="", location=""):
         if len(name) >= 3:

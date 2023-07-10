@@ -5,19 +5,20 @@ from functools import wraps
 from conservation import app, db
 from conservation.model.user import init_accounts
 from conservation.model.students import init_students
-from conservation.model.missions import init_missions
+from conservation.model.history import init_entrys
 
 from conservation.model.user import User
 from conservation.model.students import Student
-from conservation.model.missions import Missions
 
 from conservation.api.api import users_bp
 from conservation.api.api import points_bp
 from conservation.api.api import missions_bp
+from conservation.api.api import history_bp
 
 app.register_blueprint(users_bp)
 app.register_blueprint(points_bp)
 app.register_blueprint(missions_bp)
+app.register_blueprint(history_bp)
 
 @app.before_first_request
 def init_db():
@@ -26,6 +27,7 @@ def init_db():
         init_accounts()
         init_students()
         # init_missions()
+        init_entrys()
 
 @app.after_request
 def add_cache_control(response):
