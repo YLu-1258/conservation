@@ -25,6 +25,21 @@ function add_history_entry(type, content) {
 	time.classList.add("mission-time");
 	location.classList.add("mission-info");
 	location.classList.add("mission-location");
+	
+	if (content["points"] >= 7500) {
+		console.log("Found!");
+		entry.style.backgroundColor = "gold";
+		entry.style.boxShadow = "0 0 40px 10px gold"
+	} else if (content["points"] >= 5000) {
+		entry.style.backgroundColor = "purple";
+		entry.style.boxShadow = "0 0 40px 5px purple"
+	} else if (content["points"] <= 2500) {
+		entry.style.boxShadow = "0px 0px 0px 0px lightgrey";
+		entry.style.backgroundColor = "lightgreen";
+	} else {
+		entry.style.backgroundColor = "rgb(78, 174, 212)"
+		entry.style.boxShadow = "0 0 40px 1px rgb(78, 174, 212)"
+	}
 
 	// mission info content
 	points.innerHTML = '<p><i class="fas fa-globe-americas"></i> ' + content["points"] + '</p>'
@@ -47,25 +62,13 @@ function add_history_entry(type, content) {
 	description = document.createElement("p");
 	description.innerHTML = content["description"];
 
-	//append all
+	//append all child elements
 	entry.appendChild(container);
 	entry.appendChild(divider);
 	entry.appendChild(title);
 	entry.appendChild(description);
 
-	if (content["points"] >= 7500) {
-		entry.style.backgroundColor = "gold";
-		entry.style.boxShadow = "0 0 40px 10px gold"
-	} else if (content["points"] >= 5000) {
-		entry.style.backgroundColor = "purple";
-		entry.style.boxShadow = "0 0 40px 5px purple"
-	} else if (content["points"] <= 2500) {
-		entry.style.boxShadow = "0px 0px 0px 0px lightgrey";
-		entry.style.backgroundColor = "lightgreen";
-	} else {
-		entry.style.backgroundColor = "rgb(78, 174, 212)"
-		entry.style.boxShadow = "0 0 40px 1px rgb(78, 174, 212)"
-	}
+	//add to grid
 
 	grid_container.append(entry);
 }

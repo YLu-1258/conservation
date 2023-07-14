@@ -1,0 +1,12 @@
+.leaderboard-container {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.leaderboard-entry {
+    background-color: rgb(78, 174, 212);
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+}

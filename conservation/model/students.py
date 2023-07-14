@@ -77,6 +77,10 @@ class Student(db.Model):
                 "points": self._points, 
                 "levels": self._levels}
     
+    def to_dict_total_score(self):
+        return {"username": self._username, 
+                "points": self._levels*1000 + self._points}
+    
     def create(self):
         try:
             db.session.add(self)
@@ -111,7 +115,42 @@ class Student(db.Model):
         return None
     
 def init_students():
-    test_accounts = [Student(3, "test_user", 2, 34, 0), Student(4, "Eris29", 2, 0 ,5)]
+    test_accounts = [
+        Student(3, "test_user", 2, 34, 0),
+        Student(4, "Eris29", 2, 0 ,5),
+        Student(5, "Eris30", 2, 980 ,8),
+        Student(6, "Eris31", 2, 290 ,13),
+        Student(10, "user1", 7, 450, 7),
+        Student(11, "user2", 8, 230, 12),
+        Student(12, "user3", 9, 780, 9),
+        Student(13, "user4", 7, 620, 15),
+        Student(14, "user5", 8, 410, 6),
+        Student(15, "user6", 9, 750, 2),
+        Student(16, "user7", 7, 870, 14),
+        Student(17, "user8", 8, 540, 3),
+        Student(18, "user9", 9, 300, 18),
+        Student(19, "user10", 7, 910, 5),
+        Student(20, "user11", 8, 190, 11),
+        Student(21, "user12", 9, 630, 17),
+        Student(22, "user13", 7, 480, 4),
+        Student(23, "user14", 8, 800, 10),
+        Student(24, "user15", 9, 350, 16),
+        Student(25, "user16", 7, 560, 8),
+        Student(26, "user17", 8, 720, 13),
+        Student(27, "user18", 9, 530, 1),
+        Student(28, "user19", 7, 240, 20),
+        Student(29, "user20", 8, 950, 0),
+        Student(30, "user21", 9, 180, 19),
+        Student(31, "user22", 7, 760, 4),
+        Student(32, "user23", 8, 990, 10),
+        Student(33, "user24", 9, 420, 16),
+        Student(34, "user25", 7, 680, 8),
+        Student(35, "user26", 8, 110, 13),
+        Student(36, "user27", 9, 790, 1),
+        Student(37, "user28", 7, 290, 20),
+        Student(38, "user29", 8, 610, 0),
+        Student(39, "user30", 9, 880, 19)
+    ]
     for account in test_accounts:
         try:
             user_object = account.create()

@@ -4,6 +4,7 @@
 
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
 {% endblock %}
 
 {% block sidebar %}
@@ -40,7 +41,15 @@
     });
 </script>
 {% endblock %}  
-  
+<div class="leaderboard-container">
+
+</div>
+
+<script>
+    function render_leaderboard() {
+        var top10 = 
+    }
+</script>
 {% block content %}
 =
 {% endblock %}

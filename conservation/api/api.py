@@ -11,10 +11,12 @@ users_bp = Blueprint("users", __name__, url_prefix = "/api/users")
 points_bp = Blueprint("points", __name__, url_prefix = "/api/points")
 missions_bp = Blueprint("missions", __name__, url_prefix = "/api/missions")
 history_bp = Blueprint("history", __name__, url_prefix = "/api/history")
+leaderboard_bp = Blueprint("leaderboard", __name__, url_prefix = "/api/leaderboard")
 users_api = Api(users_bp)
 points_api = Api(points_bp)
 missions_api = Api(missions_bp)
 history_api = Api(history_bp)
+leaderboard_api = Api(leaderboard_bp)
 
 def get_all_user_list():
     try:
@@ -113,6 +115,21 @@ def get_history_entry_by_id(id):
         return History.query.filter_by(id=id).first()
     except:
         return
+    
+def get_user_batch(page):
+    idx = 10*page
+    scores_list = sorted([score.to_dict_total_score() for score in Student.query.all()], key=lambda s: s["points"], reverse=True )
+    counter = 0
+    batch = []
+    while (counter < 10 and idx < len(scores_list)-1):
+        temp = {}
+        temp["username"] = scores_list[idx]["username"]
+        temp["level"] = scores_list[idx]["points"] // 1000
+        temp["points"] = scores_list[idx]["points"] % 1000
+        batch.append(temp)
+        counter+=1
+        idx+=1
+    return batch
 
 class UsersAPI(Resource):
     def get(self):
@@ -125,9 +142,9 @@ class UsersAPI(Resource):
             except Exception as e:
                 return {"message": f"server error: {e}"}, 500
         
-        user = get_user_by_id(id).to_dict()
-        user["uuaid"] = get_uuaid_for_user(id)
         try:
+            user = get_user_by_id(id).to_dict()
+            user["uuaid"] = get_uuaid_for_user(id)
             return user
         except Exception as e:
             return {"message": f"server error: {e}"}, 500
@@ -347,9 +364,18 @@ class HistoryAPI(Resource):
             db.session.rollback()
             return {"message": f"server error: {e}"}, 500
 
-
+class LeaderboardAPI(Resource):
+    def get(self):
+        try:
+            page = cast_int(request.args.get("page"))
+            display = get_user_batch(page)
+            return display
+        except Exception as e:
+            return {"message": f"server error: {e}"}, 500
+        
 users_api.add_resource(UsersAPI, "/")
 points_api.add_resource(PointsAPI, "/")
 missions_api.add_resource(MissionsAPI, "/")
 missions_api.add_resource(RetrieveMissionsAPI, "/retrieve")
 history_api.add_resource(HistoryAPI, "/")
+leaderboard_api.add_resource(LeaderboardAPI, "/")

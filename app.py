@@ -14,11 +14,13 @@ from conservation.api.api import users_bp
 from conservation.api.api import points_bp
 from conservation.api.api import missions_bp
 from conservation.api.api import history_bp
+from conservation.api.api import leaderboard_bp
 
 app.register_blueprint(users_bp)
 app.register_blueprint(points_bp)
 app.register_blueprint(missions_bp)
 app.register_blueprint(history_bp)
+app.register_blueprint(leaderboard_bp)
 
 @app.before_first_request
 def init_db():
