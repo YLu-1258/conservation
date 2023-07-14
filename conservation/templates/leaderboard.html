@@ -41,25 +41,36 @@
     });
 </script>
 {% endblock %}  
-<div class="leaderboard-container">
 
-</div>
 
-<script>
-    function render_leaderboard() {
-        var top10 = 
-    }
-</script>
+
 {% block content %}
-=
+<div class="leaderboard-container">
+    <div class="leaderboard-entry" id="entry0"></div>
+    <div class="leaderboard-entry" id="entry1"></div>
+    <div class="leaderboard-entry" id="entry2"></div>
+    <div class="leaderboard-entry" id="entry3"></div>
+    <div class="leaderboard-entry" id="entry4"></div>
+    <div class="leaderboard-entry" id="entry5"></div>
+    <div class="leaderboard-entry" id="entry6"></div>
+    <div class="leaderboard-entry" id="entry7"></div>
+    <div class="leaderboard-entry" id="entry8"></div>
+    <div class="leaderboard-entry" id="entry9"></div>
+</div>
 {% endblock %}
 
 <script>
+    page = 0;
+    function render_leaderboard() {
+        var top10 = http_get(base_url + "api/leaderboard?page=" + page);
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         user_id = parseInt(get_cookie("user_id"));
         const user_info = retrieve_user_information(user_id);
         console.log(user_info);
     });
+    
 </script>
 
 {% block footer %}

@@ -176,7 +176,6 @@ class UsersAPI(Resource):
         username = request.get_json().get("username")
         password = request.get_json().get("password")
         role = request.get_json().get("role")
-        
         user = get_user_by_name(username)
         try:
             return user.update(username, password, role)
