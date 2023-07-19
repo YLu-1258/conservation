@@ -127,7 +127,7 @@
     margin-left: 0;
 }
 
-.actions {
+.actions-list {
     width:25%;
     margin: 1em;
     background-color: lightgray;
@@ -136,4 +136,26 @@
     overflow-y: auto;
     display:flex;
     flex-direction: column
+}
+
+.action {
+    height: 3em;
+    border-radius: 2em;
+    margin-bottom: 1.5em;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+#remove-mission {
+    background-color: red;
+    color: white;
+    font-size: 1.5em;
+}
+
+#add-mission {
+    background-color: rgb(33, 218, 89);
+    color: white;
+    font-size: 1.5em;
 }

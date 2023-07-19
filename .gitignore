@@ -1,7 +1,8 @@
-backend/volumes/
-backend/model/__pycache__
-backend/api/__pycache__
-backend/__pycache__
+conservation/volumes/
+conservation/volumes/users.db
+conservation/model/__pycache__
+conservation/api/__pycache__
+conservation/__pycache__
 /__pycache__
 /key.py
 *.csv

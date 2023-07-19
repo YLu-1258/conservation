@@ -34,14 +34,16 @@
     <div id="missions" class="missions">
         <h1 class="section-title"> Active missions </h1>
     </div>
-    <div id="actions" class="actions">
+    <div id="actions" class="actions-list">
         <h1 class="section-title"> Actions </h1>
+        <div class="action" id="remove-mission">Remove a mission</div>
+        <div class="action" id="add-mission">Add a mission</div>
     </div>
 </div>
 
 <script>
     
-    
+    var actions = document.getElementsByClassName("action");
     var mission_container = document.getElementById("missions");
     var student_container = document.getElementById("students-list");
     function add_student (content) {
@@ -213,6 +215,15 @@
     }
 
     render_student_list();
+
+    for (var i = 0; i < actions.length; i++) {
+        (function(index) {
+            actions[index].addEventListener("click", function() {
+            modal.style.display = "block";
+            update_modal_content(actions[index]);
+            });
+        })(i);
+    }
 
     
 </script>
