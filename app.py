@@ -15,12 +15,14 @@ from conservation.api.api import points_bp
 from conservation.api.api import missions_bp
 from conservation.api.api import history_bp
 from conservation.api.api import leaderboard_bp
+from conservation.api.api import advisor_bp
 
 app.register_blueprint(users_bp)
 app.register_blueprint(points_bp)
 app.register_blueprint(missions_bp)
 app.register_blueprint(history_bp)
 app.register_blueprint(leaderboard_bp)
+app.register_blueprint(advisor_bp)
 
 @app.before_first_request
 def init_db():
@@ -29,7 +31,7 @@ def init_db():
         init_accounts()
         init_students()
         # init_missions()
-        init_entrys()
+        # init_entrys()
 
 @app.after_request
 def add_cache_control(response):
@@ -47,6 +49,34 @@ def login_required(func):
         else:
             # User is not logged in, redirect to login page or return an error response
             return redirect('/login')
+    return wrapper
+
+def advisor_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            if session['role'] == 1:
+                # User is privileged proceed with the decorated function
+                return func(*args, **kwargs)
+            else:
+                # User is not privileged redirect to unauthorized page
+                return redirect('/unauthorized')
+        except KeyError:
+            return redirect('/unauthorized')
+    return wrapper
+
+def admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            if session['role'] == 0:
+                # User is privileged proceed with the decorated function
+                return func(*args, **kwargs)
+            else:
+                # User is not privileged redirect to unauthorized page
+                return redirect('/unauthorized')
+        except KeyError:
+            return redirect('/unauthorized')
     return wrapper
 
 @app.route('/')
@@ -71,6 +101,8 @@ def login():
                 session['user_id'] = user[0].id
                 response = make_response(redirect('/'))
                 response.set_cookie('user_id', str(user[0].id))
+                if user[0].role < 2:
+                    session['role'] = user[0].role
                 return response
         return render_template('login.html', error="Invalid Credentials")
     else:
@@ -130,6 +162,20 @@ def leaderboard():
 @app.route('/tutorial')
 def tutorial():
     return render_template("tutorial.html")
+
+@app.route('/advisor-panel')
+@advisor_required
+def advisor():
+    return render_template("advisor-panel.html")
+
+@app.route('/admin-panel')
+@admin_required
+def admin():
+    return render_template("admin-panel.html")
+
+@app.route('/unauthorized')
+def unauthorized():
+    return render_template("unauthorized.html")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port="8133")

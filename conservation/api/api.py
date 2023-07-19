@@ -12,11 +12,14 @@ points_bp = Blueprint("points", __name__, url_prefix = "/api/points")
 missions_bp = Blueprint("missions", __name__, url_prefix = "/api/missions")
 history_bp = Blueprint("history", __name__, url_prefix = "/api/history")
 leaderboard_bp = Blueprint("leaderboard", __name__, url_prefix = "/api/leaderboard")
+advisor_bp = Blueprint("advisor", __name__, url_prefix = "/api/advisor")
+
 users_api = Api(users_bp)
 points_api = Api(points_bp)
 missions_api = Api(missions_bp)
 history_api = Api(history_bp)
 leaderboard_api = Api(leaderboard_bp)
+advisor_api = Api(advisor_bp)
 
 def get_all_user_list():
     try:
@@ -131,6 +134,13 @@ def get_user_batch(page):
         idx+=1
     return batch
 
+def get_user_by_advisor(uuaid):
+    try:
+        return [student.to_dict() for student in Student.query.filter_by(_uuaid=uuaid).all()]
+    except:
+        return []
+    
+
 class UsersAPI(Resource):
     def get(self):
         id = cast_int(request.args.get("user_id"))
@@ -217,13 +227,13 @@ class PointsAPI(Resource): # POST request for creating object should be handeled
             return {"message": f"server error: {e}"}, 500
     
     def put(self):
-        username = request.get_json().get("username")
+        id = request.get_json().get("user_id")
         points = request.get_json().get("points")
         points = cast_int(points)
         try:
-            if not username:
+            if not id:
                 return {"message": "No user provided"}, 404
-            student = get_points_by_name(username) # student = get_points_by_id(get_user_by_name(username).id)
+            student = get_points_by_id(id) # student = get_points_by_id(get_user_by_name(username).id)
             if (student.points + points) >= 1000:
                 # If level up
                 total_points = student._points + points
@@ -332,7 +342,7 @@ class HistoryAPI(Resource):
         name = request.get_json().get("name")
         value = cast_int(request.get_json().get("value"))
         visibility = request.get_json().get("visibility")
-        description = request.get_son().get("description")
+        description = request.get_json().get("description")
         time = cast_int(request.get_json().get("time"))
         location = request.get_json().get("location")
         progress = cast_int(request.get_json().get("progress"))
@@ -357,11 +367,21 @@ class HistoryAPI(Resource):
         location = request.get_json().get("location")
         progress = cast_int(request.get_json().get("progress"))
         try:
-            mission_obj = get_mission_by_id(id)
-            return mission_obj.update(name, value, visibility, description, time, location)
+            history_obj = get_history_entry_by_id(id)
+            print(history_obj)
+            return history_obj.update(uuid, name, value, visibility, description, time, location, progress)
         except Exception as e:
             db.session.rollback()
             return {"message": f"server error: {e}"}, 500
+        
+    def delete(self):
+        entry_id = cast_int(request.get_json().get("id"))
+
+        entry = get_history_entry_by_id(entry_id)
+        if entry_id:
+            entry.delete()
+            return {"message": f'entry "{entry_id}"deleted'}, 200
+        return {"message": f"server error"}, 500
 
 class LeaderboardAPI(Resource):
     def get(self):
@@ -372,9 +392,20 @@ class LeaderboardAPI(Resource):
         except Exception as e:
             return {"message": f"server error: {e}"}, 500
         
+class AdvisorAPI(Resource):
+    def get(self):
+        uuaid = cast_int(request.args.get("uuaid"))
+        if uuaid:
+            try:
+                return get_user_by_advisor(uuaid)
+            except Exception as e:
+                return {"message": f"server error: {e}"}, 500
+        return {"message": f"server error: {e}"}, 500
+
 users_api.add_resource(UsersAPI, "/")
 points_api.add_resource(PointsAPI, "/")
 missions_api.add_resource(MissionsAPI, "/")
 missions_api.add_resource(RetrieveMissionsAPI, "/retrieve")
 history_api.add_resource(HistoryAPI, "/")
 leaderboard_api.add_resource(LeaderboardAPI, "/")
+advisor_api.add_resource(AdvisorAPI, "/")

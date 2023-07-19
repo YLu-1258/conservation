@@ -8,23 +8,7 @@
 {% endblock %}
 
 {% block sidebar %}
-<button class="openbtn" id="openbtn" onclick="toggleSidebar()">&#9776; Sidebar</button>
-<div id="mySidebar" class="sidebar">
-    <div class="user-profile">
-        <img src="../static/images/user.png" alt="User Avatar" class="avatar">
-        <p class="username" id="display-name">John Doe</span>
-    </div>
-    <a href="/" class="sidebar-link" aria-disabled="true" ><i class="fas fa-home"></i> Missions</a>
-    <a href="/history" class="sidebar-link"><i class="fas fa-history"></i> History </a>
-    <a href="#" class="sidebar-link-current"><i class="fas fa-trophy" style="color: #ffffff;"></i> Leaderboard</a>
-    <a href="/tutorial" class="sidebar-link"><i class="fas fa-question-circle"></i> Help/Tutorial </a>
-    <a href="/login" class="sidebar-link"><i class="fas fa-sign-in-alt"></i> Log in</a>
-    <a href="/logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</div>
-<script>
-    var profile_name = document.getElementById("display-name");
-    profile_name.innerHTML = user_info["username"];
-</script>
+
 {% endblock %}
 
 {% block header %}
@@ -40,29 +24,92 @@
     textElement.classList.add('hide-cursor');
     });
 </script>
-{% endblock %}  
+{% endblock %}      
 
 
 
 {% block content %}
-<div class="leaderboard-container">
-    <div class="leaderboard-entry" id="entry0"></div>
-    <div class="leaderboard-entry" id="entry1"></div>
-    <div class="leaderboard-entry" id="entry2"></div>
-    <div class="leaderboard-entry" id="entry3"></div>
-    <div class="leaderboard-entry" id="entry4"></div>
-    <div class="leaderboard-entry" id="entry5"></div>
-    <div class="leaderboard-entry" id="entry6"></div>
-    <div class="leaderboard-entry" id="entry7"></div>
-    <div class="leaderboard-entry" id="entry8"></div>
-    <div class="leaderboard-entry" id="entry9"></div>
-</div>
-{% endblock %}
+<i class="fas fa-chevron-left" style="color: #ffffff;" onclick="null" id="left-button"></i>
+<div class="leaderboard-container" id="leaderboard-container"></div>
+<i class="fas fa-chevron-right" style="color: #ffffff;" onclick="increment_page()" id="right-button" ></i>
+
 
 <script>
     page = 0;
+    var leaderboard_container = document.getElementById("leaderboard-container");
+    var left = document.getElementById("left-button");
+    var right = document.getElementById("right-button");
+
+    function add_leaderboard_entry(content) {
+        console.log(content["username"]);
+        var entry = document.createElement("div");
+        var rank = document.createElement("p");
+        var pfp = document.createElement("img");
+        var name = document.createElement("p");
+        var level = document.createElement("p");
+        var points = document.createElement("p");
+
+        entry.classList.add("leaderboard-entry")
+        rank.classList.add("leaderboard-rank");
+        pfp.classList.add("leaderboard-picture");
+        name.classList.add("leaderboard-name");
+        level.classList.add("leaderboard-level");
+        points.classList.add("leaderboard-points");
+
+        rank.innerHTML = content["rank"];
+        pfp.src = "../static/images/user.png";
+        pfp.alt="User Picture";
+        name.innerHTML = content["username"];
+        level.innerHTML = '<i class="fas fa-crown"></i> ' + content["level"];
+        points.innerHTML = '<i class="fas fa-globe-americas"></i> ' + content["points"];
+
+        entry.appendChild(rank);
+        entry.appendChild(pfp);
+        entry.appendChild(name);
+        entry.appendChild(level);
+        entry.appendChild(points);
+
+        leaderboard_container.appendChild(entry);
+        
+    }
+
     function render_leaderboard() {
         var top10 = http_get(base_url + "api/leaderboard?page=" + page);
+        if (page == 0) {
+                left.onclick=null;
+        } else if (top10.length < 10){
+                right.onclick=null;
+        }
+        clear_leaderboard();
+        for (let i = 0; i < top10.length; i++) {
+            
+            let data = top10[i];
+            data["rank"] = (page*10)+i+1;
+            add_leaderboard_entry(data);
+        }
+    }
+
+    function clear_leaderboard() {
+        var last = leaderboard_container.lastElementChild;
+        while (last) {
+            leaderboard_container.removeChild(last);
+            last = leaderboard_container.lastElementChild;
+        }
+    }
+
+    function increment_page() {
+        // enable decrement when called
+        page++;
+        render_leaderboard();
+        left.onclick=decrement_page;
+
+    }
+
+    function decrement_page() {
+        // enable increment when called
+        page--;
+        render_leaderboard();
+        right.onclick=increment_page;
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -71,7 +118,11 @@
         console.log(user_info);
     });
     
+    render_leaderboard()
 </script>
+{% endblock %}
+
+
 
 {% block footer %}
 <p class="footer-text">2023 Alexander Lu</p>

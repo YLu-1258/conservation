@@ -61,3 +61,16 @@
     flex-basis: 25%;
     font-size: 2em;
 }
+
+#start-button {
+    margin: 0px auto;
+    border: 0px;
+    background-color: gold;
+    width: 50%;
+}
+
+#start-button:hover {
+    background-color: #292929;
+    color: #fff;
+    transition: 0.5s ease-in-out;
+}

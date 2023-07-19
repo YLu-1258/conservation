@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Wildlife Conservation{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/advisor.css') }}">
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block header %}
+<div>
+    <h1 class="line-1 anim-typewriter">
+        Advisor Panel
+    </h1>
+</div>
+<script>
+    const textElement = document.querySelector('.line-1');
+
+    textElement.addEventListener('animationend', () => {
+    textElement.classList.add('hide-cursor');
+    });
+</script>
+{% endblock %}  
+  
+{% block content %}
+<div class="container">
+    <div id="students-list" class="students-list">
+        <h1 class="section-title"> Assigned Students </h1>
+    </div>
+    <div id="missions" class="missions">
+        <h1 class="section-title"> Active missions </h1>
+    </div>
+    <div id="actions" class="actions">
+        <h1 class="section-title"> Actions </h1>
+    </div>
+</div>
+
+<script>
+    
+    
+    var mission_container = document.getElementById("missions");
+    var student_container = document.getElementById("students-list");
+    function add_student (content) {
+        // retrieve our grid
+        
+        // create entry element
+        var entry = document.createElement("div");
+        entry.classList.add("student-entry");
+
+        // create entry sub-elements
+        var row1 = document.createElement("div");
+        var row2 = document.createElement("div");
+        row1.classList.add("entry-row");
+        row2.classList.add("entry-row");
+
+        var pfp = document.createElement("img");
+        pfp.src = "../static/images/user.png"
+        pfp.alt = "User Avatar"
+        pfp.classList.add("profile-picture")
+        var username = document.createElement("p");
+        username.classList.add("student-name");
+        var levels = document.createElement("p");
+        levels.classList.add("levels");
+        var points = document.createElement("p");
+        points.classList.add("points");
+
+        username.innerHTML = content["username"]
+        levels.innerHTML = '<i class="fas fa-crown"></i> ' + content["levels"];
+        points.innerHTML = '<i class="fas fa-globe-americas"></i> ' + content["points"]
+        
+        row1.appendChild(pfp);
+        row1.appendChild(username);
+
+        row2.appendChild(levels);
+        row2.appendChild(points);
+
+        entry.appendChild(row1);
+        entry.appendChild(row2);
+
+        entry.onclick = function(){render_mission_list(content['_uuid']);};
+
+        student_container.appendChild(entry);
+    }
+
+    function render_student_list() {
+        clear_student_list()
+        var student_list = http_get(base_url + "/api/advisor?uuaid=" + user_info["uuid"]);
+        for (let i = 0; i < student_list.length; i++) {
+            info = student_list[i];
+            add_student(info);
+        }
+    }
+
+    function add_mission_entry (content, uuid) {
+        console.log(content['id']);
+        // create entry element
+        var entry = document.createElement("div");
+        entry.classList.add("mission-entry");
+
+        // create mission info container
+        var container = document.createElement("div");
+        container.classList.add("mission-info-container");
+
+        // mission info details
+        var points = document.createElement("div");
+        var visibility = document.createElement("div");
+        var time = document.createElement("div");
+        var location = document.createElement("div");
+        points.classList.add("mission-info");
+        points.classList.add("mission-points");
+        visibility.classList.add("mission-info");
+        visibility.classList.add("mission-visibility");
+        time.classList.add("mission-info");
+        time.classList.add("mission-time");
+        location.classList.add("mission-info");
+        location.classList.add("mission-location");
+
+        // mission info content
+        points.innerHTML = '<p><i class="fas fa-globe-americas"></i> ' + content["value"] + '</p>'
+        visibility.innerHTML = '<p><i class="far fa-eye"></i> ' + http_get(base_url + "api/users?user_id=" + content["visibility"])["username"] + '</p>'
+        time.innerHTML = '<p><i class="far fa-clock"></i> ' + content["time"] + '</p>'
+        location.innerHTML = '<p><i class="fas fa-map-marker-alt"></i> ' + content["location"] + '</p>'
+
+        // add mission info to container
+        container.appendChild(points);
+        container.appendChild(visibility);
+        container.appendChild(time);
+        container.appendChild(location);
+
+        // creating additional elements
+        divider = document.createElement("hr");
+        divider.classList.add("mission-divider");
+        title = document.createElement("h1");
+        title.classList.add("mission-title");
+        title.innerHTML = content["name"];
+        description = document.createElement("p");
+        description.innerHTML = (content["description"].length < 100) ? content["description"] : content["description"].substring(0,100) + "...";;
+        button_container = document.createElement("div");
+        button_container.classList.add("button-container");
+        complete_button = document.createElement("button");
+        complete_button.classList.add("mission-button");
+        complete_button.innerHTML = "Mark as Complete";
+        complete_button.onclick = function(){mark_as_complete(content['id']);mission_container.removeChild(entry);http_put(base_url + "api/points", {"user_id":uuid, "points":content["value"]});render_student_list()};
+        remove_button = document.createElement("button");
+        remove_button.classList.add("mission-button");
+        remove_button.innerHTML = "Remove from User"
+        remove_button.onclick = function(){remove_from_user(content['id']);mission_container.removeChild(entry);};
+
+
+
+        button_container.appendChild(complete_button);
+        button_container.appendChild(remove_button);
+
+        //append all
+        entry.appendChild(container);
+        entry.appendChild(divider);
+        entry.appendChild(title);
+        entry.appendChild(description);
+        entry.appendChild(button_container);
+
+        
+
+
+        if (content["points"] >= 7500) {
+            entry.style.backgroundColor = "gold";
+        } else if (content["points"] >= 5000) {
+            entry.style.backgroundColor = "purple";
+        } else if (content["points"] <= 2500) {
+            entry.style.backgroundColor = "lightgreen";
+        } else {
+            entry.style.backgroundColor = "rgb(78, 174, 212)"
+        }
+
+        mission_container.append(entry);
+    }
+
+    function clear_missions_list() {
+        var last = mission_container.lastElementChild;
+        while (mission_container.childElementCount > 1) {
+            mission_container.removeChild(last);
+            last = mission_container.lastElementChild;
+        }
+    }
+
+    function clear_student_list() {
+        var last = student_container.lastElementChild;
+        while (student_container.childElementCount > 1) {
+            student_container.removeChild(last);
+            last = student_container.lastElementChild;
+        }
+    }
+    
+    function render_mission_list(uuid) {
+        clear_missions_list();
+        const user_history = http_get(base_url + "api/history?user_id=" + uuid)["in_progress"];
+        for (let i = 0; i < user_history.length; i++) {
+            add_mission_entry(user_history[i], uuid);
+        }
+    }
+
+    function mark_as_complete(id) {
+        data = {"id": id, "progress": 1};
+        http_put(base_url + "/api/history", data);
+    }
+
+    function remove_from_user(id) {
+        data = {"id":id};
+        http_delete(base_url + "/api/history", data);
+    }
+
+    render_student_list();
+
+    
+</script>
+{% endblock %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        user_id = parseInt(get_cookie("user_id"));
+        const user_info = retrieve_user_information(user_id);
+        console.log(user_info);
+        
+    });
+</script>
+
+{% block footer %}
+<p class="footer-text">2023 Alexander Lu</p>
+{% endblock %}

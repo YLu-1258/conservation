@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text
+from sqlalchemy import Column, Integer, Text, UniqueConstraint
 from sqlalchemy.exc import IntegrityError
 from conservation.helpers import cast_int
 from conservation import db
@@ -15,6 +15,7 @@ class History(db.Model):
     _time = Column(Integer, nullable=True)                       #
     _location = Column(Text, nullable=True)
     _progress = Column(Integer, nullable=False)
+    __table_args__ = (UniqueConstraint('_uuid', '_name', "_value", "_visibility", "_description", "_time", "_location", "_progress", name='_ensure_uniq'),)
     
     def __init__(self, uuid, name, value, visibility, description, time, location, progress):
         self._uuid = uuid
@@ -123,10 +124,10 @@ class History(db.Model):
             db.session.remove()
             return None
 
-    def update(self, uuid="", name="", value="", visibility="", description ="", time="", location="", progress=""):
+    def update(self, uuid="", name="", value="", visibility="", description="", time="", location="", progress=""):
         if uuid:
             self._uuid = cast_int(uuid)
-        if len(name) >= 3:
+        if name:
             self._name = name
         if value:
             self._value = cast_int(value)
@@ -138,9 +139,10 @@ class History(db.Model):
             self._time = cast_int(time)
         if location:
             self._location = location
+        if progress:
+            self._progress = cast_int(progress)
         db.session.commit()
-        return self.read()
-
+        return self.to_dict()
 
     def delete(self):
         db.session.delete(self)

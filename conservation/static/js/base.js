@@ -28,8 +28,24 @@ function http_get(url){
 function http_post(url, payload){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "POST", url, false );
-    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xmlhttp.send(JSON.stringify(payload));
+    xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlHttp.send(JSON.stringify(payload));
+    return JSON.parse(xmlHttp.responseText);
+}
+
+function http_put(url, payload){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "PUT", url, false );
+    xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlHttp.send(JSON.stringify(payload));
+    return JSON.parse(xmlHttp.responseText);
+}
+
+function http_delete(url, payload){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "DELETE", url, false );
+    xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlHttp.send(JSON.stringify(payload));
     return JSON.parse(xmlHttp.responseText);
 }
 
@@ -51,23 +67,26 @@ function configure_sidebar_visibility() {
     missions.innerHTML = '<i class="fas fa-home"></i> Missions';
     missions.setAttribute("href", "/")
     missions.classList.remove("hidden-link");
+    // Normal users are privileged to see history
     if (role === 2) {
         let history = document.getElementById("history-link");
 
         history.innerHTML = '<i class="fas fa-history"></i> History';
         history.setAttribute("href", "/history")
         history.classList.remove("hidden-link");
+    // Advisor level users can see the advisor panel to manage their students
     } else if (role === 1) {
-        let advisor = document.getElementById("advisor-link");
+        let advisor = document.getElementById("advisors-link");
 
         advisor.innerHTML = '<i class="fas fa-users-cog"></i> Advisor panel';
-        advisor.setAttribute("href", "/advisors")
+        advisor.setAttribute("href", "/advisor-panel")
         advisor.classList.remove("hidden-link");
+    // Admin level users can use the admin pane to manage their students
     } else if (role === 0) {
         let admin = document.getElementById("admin-link");
 
         admin.innerHTML = '<i class="fas fa-cog"></i> Admin panel';
-        admin.setAttribute("href", "/admin")
+        admin.setAttribute("href", "/admin-panel")
         admin.classList.remove("hidden-link");
     }
 }

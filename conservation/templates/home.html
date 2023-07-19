@@ -135,7 +135,7 @@
 </div>
 <i class="fas fa-chevron-right" style="color: #ffffff;" onclick="increment_page()" id="right-button" ></i>
 
-<div id="event-modal" class="modal">
+<div id="event-modal" class="modal" data-mission-id="0">
     <div class="modal-content" id="modal-content">
         <span class="close" id="modal-close">&times;</span>
         <div class="mission-info-container" id="mission-info-container">
@@ -155,6 +155,7 @@
         <h1 class="mission-title" id="mission-title">0</h1>
         <hr>
         <p id="mission-description">No event</p>
+        <button id="start-button" onclick="start_mision()" class="start-button">Start Mission</button>
     </div>
 </div>
 
@@ -162,10 +163,9 @@
 <script>
     // Get the modal element
     var modal = document.getElementById("event-modal");
-    console.log(modal);
     var modal_content = modal.querySelector("#modal-content");
-    console.log(modal_content);
     var modal_info = modal_content.querySelector("#mission-info-container");
+    var start_button = document.getElementById("start-button");
 
     // Get the div elements to open the modal
     var divs = document.getElementsByClassName("grid-item");
@@ -174,9 +174,8 @@
     var close_button = document.getElementById("modal-close");
 
     function update_modal_content(element) {
-        console.log("Element:");
-        console.log(element);
         mission_id = element.getAttribute("data-mission-id");
+        modal.setAttribute("data-mission-id", mission_id);
         let points = modal_info.querySelector("#mission-points");
         let visibility = modal_info.querySelector("#mission-visibility");
         let time = modal_info.querySelector("#mission-time");
@@ -192,8 +191,8 @@
             description.innerHTML = "";
             return;
         }
-        mission_json = http_get(base_url + "api/missions?id=" + mission_id)
-
+        
+        mission_json = http_get(base_url + "api/missions?id=" + mission_id);
         
 
         points.innerHTML = '<i class="fas fa-globe-americas"></i> ' + mission_json["value"];
@@ -202,6 +201,22 @@
         location.innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + mission_json["location"];
         title.innerHTML = mission_json["name"];
         description.innerHTML = mission_json["description"];
+
+        start_button.onclick = () => {
+            const payload = {
+                "uuid": user_info["uuid"],
+                "name": mission_json["name"],
+                "value": mission_json["value"],
+                "visibility": mission_json["visibility"],
+                "description": mission_json["description"],
+                "time": mission_json["time"],
+                "location": mission_json["location"],
+                "progress": 0
+            };
+            console.log(payload);
+
+            http_post(base_url + "/api/history", payload);
+        }
     }
     // Open the modal when a div is clicked
     for (var i = 0; i < divs.length; i++) {
